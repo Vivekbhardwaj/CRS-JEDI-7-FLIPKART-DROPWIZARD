@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentRegisteredCourses;
+import com.crs.flipkart.bean.StudentResponse;
 import com.crs.flipkart.business.StudentImplementation;
 import com.crs.flipkart.business.StudentInterface;
 import com.crs.flipkart.constants.Gender;
@@ -44,21 +45,28 @@ public class StudentRestApi {
      * @return student details
      * @throws SQLException 
      */
+	
     @GET
     @Path("/student/{studentId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewStudent(@PathParam("studentId") int studentId){
         
         StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
+        StudentResponse studentResponse = new StudentResponse();
         Student student = new Student();
         try {
             student = studentDaoOperation.viewStudentDetails(studentId);
             
-        } catch (Exception e) {
+            studentResponse.setName(student.getName());
+            studentResponse.setAddress(student.getAddress());
+            studentResponse.setContactNo(student.getContactNo());
+            studentResponse.setGender(student.getGender());
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
         
-        return Response.status(200).entity(student).build();
+        return Response.status(200).entity(studentResponse).build();
     }
     
  
@@ -66,6 +74,7 @@ public class StudentRestApi {
      * Method to handle API request to add student data
      * @return response 
      */
+    
     @POST
     @Path("/add")
     @Consumes("application/json")
@@ -84,6 +93,7 @@ public class StudentRestApi {
      * @return list of courses
      * @throws SQLException 
      */
+    
     @GET
     @Path("/catalogue")
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,6 +114,7 @@ public class StudentRestApi {
      * @return status ("SUCCESS"/"PENDING")
      * @throws SQLException 
      */
+    
     @GET
     @Path("/paymentStatus/{studentId}")
     @Consumes("application/json")
@@ -113,6 +124,7 @@ public class StudentRestApi {
        String result = null;
        try {
            result = studentDaoOperation.getPaymentStatus(studentId);
+           
        } catch (Exception e) {
            e.printStackTrace();
        }
@@ -125,6 +137,7 @@ public class StudentRestApi {
      * @return list of students
      * @throws SQLException 
      */
+    
     @GET
     @Path("/student")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,7 +146,16 @@ public class StudentRestApi {
        
        try {
            ArrayList<Student> result = studentDaoOperation.viewAllStudents();
-           return Response.status(Status.OK).entity(result).build();
+           ArrayList<StudentResponse> response = new ArrayList<StudentResponse>();
+           for(Student student : result) {
+        	   StudentResponse studentResponse = new StudentResponse();
+        	   studentResponse.setName(student.getName());
+               studentResponse.setAddress(student.getAddress());
+               studentResponse.setContactNo(student.getContactNo());
+               studentResponse.setGender(student.getGender());
+               response.add(studentResponse);
+           }
+           return Response.status(Status.OK).entity(response).build();
        } catch (Exception e) {
            e.printStackTrace();
            return Response.status(Status.EXPECTATION_FAILED).entity("Exception occured").build();
@@ -166,6 +188,7 @@ public class StudentRestApi {
      * @return gradecard
      * @throws SQLException 
      */
+    
     @GET
     @Path("/gradecard/{studentId}")
     @Produces(MediaType.APPLICATION_JSON)
