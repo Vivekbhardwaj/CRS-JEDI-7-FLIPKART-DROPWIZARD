@@ -5,6 +5,7 @@ package com.crs.flipkart.business;
 
 import java.util.ArrayList;
 
+import com.crs.flipkart.bean.GradeCard;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
@@ -45,9 +46,10 @@ public interface StudentInterface {
 	 /**
 		 * Method to display grade card
 		 * @param StudentId
+	 * @return 
 		 * @throws GradeCardNotPublishedException
 	*/
-	 public void displayGradeCard(int studentId) throws GradeCardNotPublishedException;
+	 public GradeCard displayGradeCard(int studentId) throws GradeCardNotPublishedException;
 	 
 	 /**
 		 * Method for checking student registered or not
