@@ -108,7 +108,7 @@ public class StudentImplementation implements StudentInterface{
 	 * @throws GradeCardNotPublishedException
 	 */
 	@Override
-	public void displayGradeCard(int studentId) throws GradeCardNotPublishedException {
+	public GradeCard displayGradeCard(int studentId) throws GradeCardNotPublishedException {
 		// TODO Auto-generated method stub
 		
 		StudentRegisteredCourses studentRegisteredCourses = courseDaoImplementation.getStudentRegisteredCourses(studentId);
@@ -121,6 +121,8 @@ public class StudentImplementation implements StudentInterface{
 		
 		if(gradeCard.isPublished())
 		{
+			return gradeCard;
+			/*
 			System.out.println("\n===================GRADE CARD===================\n");
 			System.out.println("  Student Id: "+ gradeCard.getStudentId());
 			System.out.println("\n  Serial No\tCourse Name\tGrade");
@@ -130,6 +132,7 @@ public class StudentImplementation implements StudentInterface{
 			System.out.println("  4\t\t"+ courseDaoImplementation.getCourseFromCourseId(studentRegisteredCourses.getCourseId4()).getName() +"\t\t" + grade4);
 			System.out.printf("\n  SGPA: %.2f", gradeCard.getSgpa());
 			System.out.println("\n=================================================\n");
+			*/
 		}
 		else
 		{

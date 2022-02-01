@@ -15,34 +15,35 @@ import org.apache.log4j.Logger;
 
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.Student;
+import com.crs.flipkart.constants.Gender;
+import com.crs.flipkart.constants.Role;
 import com.crs.flipkart.constants.SqlQueryConstants;
 import com.crs.flipkart.utils.DBUtils;
 
 /**
  * @author HP
- * Dao Class Operations for Professor
- * 
+ *
  */
 public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
-	Connection conn = DBConnection.connectDB();
+	
 	private static Logger logger = Logger.getLogger(ProfessorDaoOperation.class);
 	
-	 private static volatile ProfessorDaoOperation instance = null;
+    private static volatile ProfessorDaoOperation instance = null;
 
-		private ProfessorDaoOperation(){}
-	    /**
-	     * Singleton pattern to get only one instance of the class
-	     * @return Instance of the class
-	     */
-	    public static ProfessorDaoOperation getInstance() {
-	        if (instance == null) {
-	            synchronized (ProfessorDaoOperation.class) {
-	                instance = new ProfessorDaoOperation();
-	            }
-	        }
-	        return instance;
-	    }
+	private ProfessorDaoOperation(){}
+    /**
+     * Singleton pattern to get only one instance of the class
+     * @return Instance of the class
+     */
+    public static ProfessorDaoOperation getInstance() {
+        if (instance == null) {
+            synchronized (ProfessorDaoOperation.class) {
+                instance = new ProfessorDaoOperation();
+            }
+        }
+        return instance;
+    }
 	/**
 	 * Method to get Courses by Professor Id using SQL Commands
 	 * @param professorId the id of professor
@@ -51,27 +52,36 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 */
 	@Override
 	public boolean selectCourse(int professorId, int courseId) {
+		Connection conn = DBConnection.connectDB();
 		// TODO Auto-generated method stub
 		try {
-			Connection conn = DBConnection.connectDB();
+			 
 			PreparedStatement stmt = null;
-			String sql = SqlQueryConstants.SELECT_COURSES_QUERY;
+			String sql = "Select * from course ";
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, courseId);
-			 ResultSet rs = stmt.executeQuery();
+		 	ResultSet rs = stmt.executeQuery();
+		 	
 			 while(rs.next()){
-				 PreparedStatement stmt1 = null;
-				 String sqlUpdate = SqlQueryConstants.SELECT_COURSES_QUERY1;
-				 stmt1=conn.prepareStatement(sqlUpdate);
-				System.out.println("Course Available");
-				 stmt1.setInt(1,professorId);
-				 stmt1.setInt(2,courseId);
-				 
-				 int r=stmt1.executeUpdate();
-				
-				 return true; 
-				 //System.out.println("Wow: "+rs.getInt("courseId"));
-		     }
+				 if(rs.getInt("courseId")==courseId) {
+					
+					 if(rs.getInt("professorId")==0) {
+						 
+						 PreparedStatement stmt1 = null;
+						 String sqlUpdate = SqlQueryConstants.SELECT_COURSES_QUERY1;
+						 stmt1=conn.prepareStatement(sqlUpdate);
+						
+						 stmt1.setInt(1,professorId);
+						 stmt1.setInt(2,courseId);
+						 
+						 int r=stmt1.executeUpdate();
+						
+						 return true;
+						 
+			            }
+				 }
+		            
+		            
+		       }
 			 
 			 	return false;
 			 	
@@ -91,6 +101,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
 	@Override
 	public Map<Integer,ArrayList<Student>> viewEnrolledStudents(int professorid) {
+		Connection conn = DBConnection.connectDB();
 		// TODO Auto-generated method stub
 		try {
 			// System.out.println("hello");
@@ -136,6 +147,20 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 						stu.setStudentId(rs3.getInt("studentId"));
 						stu.setName(rs3.getString("name"));
 						stu.setContactNo(rs3.getString("contactNo"));
+						stu.setAddress(rs3.getString("address"));
+						stu.setGender(Gender.stringToGender(rs3.getString("gender")));
+						stu.setGradeCardVisibility(rs3.getInt("gradeCardVisibility")==1);
+						stu.setRole(Role.stringToName("student"));
+						stu.setUserId(rs3.getInt("studentId"));
+						PreparedStatement stmt5 = null;
+					 	String sql5 = "Select * from user where userId = ?";
+					 	stmt5 = conn.prepareStatement(sql5);
+					 	stmt5.setInt(1, rs3.getInt("studentId"));
+					 	ResultSet rs5 = stmt5.executeQuery();
+					 	while(rs5.next()) {
+					 		stu.setUsername(rs5.getString("username"));
+					 		stu.setPasswordHash(rs5.getString("password"));
+					 	}
 							registeredstudents.add(stu);
 							check.put(stu,1);
 						
@@ -161,6 +186,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 * @return Grades to student
 */
 	public Boolean assignGrade(int studentId, int courseId,float grade) {
+		Connection conn = DBConnection.connectDB();
 		try {
 			PreparedStatement stmt = null;
 			
@@ -187,13 +213,14 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 */
 	@Override
 	public ArrayList<Course> viewAvailableCourses() {
-		Connection conn = DBUtils.getConnection();
+		  Connection conn = DBConnection.connectDB();
 		try {
 			ArrayList<Course> clist = new ArrayList<Course>();
 			PreparedStatement stmt = null;
 			String sql = SqlQueryConstants.AVAILABLE_COURSE_QUERY;
 			stmt = conn.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery(sql);
+			 System.out.println(1);
 			 while(rs.next()){
 		            //Display values
 				 	Course c = new Course();
