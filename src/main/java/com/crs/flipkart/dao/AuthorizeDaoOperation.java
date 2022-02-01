@@ -24,7 +24,7 @@ import com.crs.flipkart.utils.DBUtils;
 public class AuthorizeDaoOperation implements AuthorizeDaoInterface{
 
 	private static Logger logger = Logger.getLogger(AuthorizeDaoOperation.class);
-	private Connection conn = DBUtils.getConnection();
+	private Connection conn = DBConnection.connectDB();
 	
 	/**
 	 * Method for authorizeUser
@@ -35,14 +35,13 @@ public class AuthorizeDaoOperation implements AuthorizeDaoInterface{
 	public Role authorizeUser(String username, String password) {
 		try {
 			PreparedStatement stmt = null;
+			System.out.println(username+" "+password);
 			String sql = "SELECT * FROM user join role ON (user.userId = role.userId) WHERE username = ? AND password = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, username);
 			stmt.setString(2, password);
 			 ResultSet rs = stmt.executeQuery();
 			 while(rs.next()){
-				 	CRSApplication.setUserId(rs.getInt("userId"));
-				 	CRSApplication.setUserName(rs.getString("username"));
 		            return Role.stringToName(rs.getString("roleName"));
 			 }
 			}

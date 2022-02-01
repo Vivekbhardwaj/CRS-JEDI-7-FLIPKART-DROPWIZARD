@@ -28,8 +28,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
     private Connection conn = DBConnection.connectDB();
     private static Logger logger = Logger.getLogger(StudentDaoOperation.class);
 
-    private void StudentImplementation(){}
-
     public static StudentDaoOperation getInstance(){
         if(instance==null){
             synchronized (com.crs.flipkart.business.StudentImplementation.class){
@@ -279,6 +277,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			while (rs.next()) {
 				String s = rs.getString("paymentStatus");
 				result = s;
+				logger.info(s);
 				break;
 			}
 		} catch (SQLException se) {

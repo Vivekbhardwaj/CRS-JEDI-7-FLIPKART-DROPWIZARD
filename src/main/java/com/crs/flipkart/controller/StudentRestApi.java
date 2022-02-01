@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentRegisteredCourses;
+import com.crs.flipkart.bean.StudentResponse;
 import com.crs.flipkart.business.StudentImplementation;
 import com.crs.flipkart.business.StudentInterface;
 import com.crs.flipkart.constants.Gender;
@@ -29,7 +31,7 @@ import com.crs.flipkart.dao.StudentDaoOperation;
  
  
 /**
- * @author Rama
+ * @author Group 3
  *
  */
  
@@ -40,24 +42,31 @@ public class StudentRestApi {
     /**
      * Method to handle API request to view student
      * @param studentId
-     * @return student
+     * @return student details
      * @throws SQLException 
      */
+	
     @GET
     @Path("/student/{studentId}")
-//  @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    public Student viewStudent(@PathParam("studentId") int studentId){
+    public Response viewStudent(@PathParam("studentId") int studentId){
         
         StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
+        StudentResponse studentResponse = new StudentResponse();
         Student student = new Student();
         try {
             student = studentDaoOperation.viewStudentDetails(studentId);
             
-        } catch (Exception e) {
+            studentResponse.setName(student.getName());
+            studentResponse.setAddress(student.getAddress());
+            studentResponse.setContactNo(student.getContactNo());
+            studentResponse.setGender(student.getGender());
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
-        return student;
+        
+        return Response.status(200).entity(studentResponse).build();
     }
     
  
@@ -65,6 +74,7 @@ public class StudentRestApi {
      * Method to handle API request to add student data
      * @return response 
      */
+    
     @POST
     @Path("/add")
     @Consumes("application/json")
@@ -83,6 +93,7 @@ public class StudentRestApi {
      * @return list of courses
      * @throws SQLException 
      */
+    
     @GET
     @Path("/catalogue")
     @Produces(MediaType.APPLICATION_JSON)
@@ -103,15 +114,17 @@ public class StudentRestApi {
      * @return status ("SUCCESS"/"PENDING")
      * @throws SQLException 
      */
+    
     @GET
     @Path("/paymentStatus/{studentId}")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response paymentStatus(@PathParam("studentId") int studentId) {          //returns null
+    public Response paymentStatus(@PathParam("studentId") int studentId) {         
        StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
        String result = null;
        try {
            result = studentDaoOperation.getPaymentStatus(studentId);
+           
        } catch (Exception e) {
            e.printStackTrace();
        }
@@ -124,6 +137,7 @@ public class StudentRestApi {
      * @return list of students
      * @throws SQLException 
      */
+    
     @GET
     @Path("/student")
     @Produces(MediaType.APPLICATION_JSON)
@@ -132,7 +146,16 @@ public class StudentRestApi {
        
        try {
            ArrayList<Student> result = studentDaoOperation.viewAllStudents();
-           return Response.status(Status.OK).entity(result).build();
+           ArrayList<StudentResponse> response = new ArrayList<StudentResponse>();
+           for(Student student : result) {
+        	   StudentResponse studentResponse = new StudentResponse();
+        	   studentResponse.setName(student.getName());
+               studentResponse.setAddress(student.getAddress());
+               studentResponse.setContactNo(student.getContactNo());
+               studentResponse.setGender(student.getGender());
+               response.add(studentResponse);
+           }
+           return Response.status(Status.OK).entity(response).build();
        } catch (Exception e) {
            e.printStackTrace();
            return Response.status(Status.EXPECTATION_FAILED).entity("Exception occured").build();
@@ -141,7 +164,7 @@ public class StudentRestApi {
     }
     
     /**
-     * Method to handle API request to view catalog
+     * Method to handle API request to check if student is registered
      * @return list of courses
      * @throws SQLException 
      */
@@ -165,6 +188,7 @@ public class StudentRestApi {
      * @return gradecard
      * @throws SQLException 
      */
+    
     @GET
     @Path("/gradecard/{studentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -178,6 +202,32 @@ public class StudentRestApi {
                e.printStackTrace();
                return Response.status(Status.EXPECTATION_FAILED).entity("Exception occured").build();
            }
+    }
+    
+    
+    /**
+     * Method to handle API request to verify payment using payment reference number
+     * @param studentId
+     * @param referenceNumber
+     * @return
+     * @throws SQLException 
+     */
+    @PUT
+    @Path("/payfees/{studentId}/{referenceNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makePayment(@PathParam("studentId") int studentId,@PathParam("referenceNo") String referenceNo){
+        
+        StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
+        try {
+        	//logic of checking if payment has been made with this reference number
+        	studentDaoOperation.makePaymentSuccessful(studentId,referenceNo);
+        	return Response.status(200).entity("PaymentSuccessful").build();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Status.NOT_FOUND).entity("Payment Still Pending").build();
+        }
+        
     }
     
     @GET
