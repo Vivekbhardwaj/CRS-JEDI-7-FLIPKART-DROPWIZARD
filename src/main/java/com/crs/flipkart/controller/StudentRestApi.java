@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,7 +30,7 @@ import com.crs.flipkart.dao.StudentDaoOperation;
  
  
 /**
- * @author Rama
+ * @author Group 3
  *
  */
  
@@ -40,14 +41,13 @@ public class StudentRestApi {
     /**
      * Method to handle API request to view student
      * @param studentId
-     * @return student
+     * @return student details
      * @throws SQLException 
      */
     @GET
     @Path("/student/{studentId}")
-//  @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    public Student viewStudent(@PathParam("studentId") int studentId){
+    public Response viewStudent(@PathParam("studentId") int studentId){
         
         StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
         Student student = new Student();
@@ -57,7 +57,8 @@ public class StudentRestApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return student;
+        
+        return Response.status(200).entity(student).build();
     }
     
  
@@ -107,7 +108,7 @@ public class StudentRestApi {
     @Path("/paymentStatus/{studentId}")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response paymentStatus(@PathParam("studentId") int studentId) {          //returns null
+    public Response paymentStatus(@PathParam("studentId") int studentId) {         
        StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
        String result = null;
        try {
@@ -141,7 +142,7 @@ public class StudentRestApi {
     }
     
     /**
-     * Method to handle API request to view catalog
+     * Method to handle API request to check if student is registered
      * @return list of courses
      * @throws SQLException 
      */
@@ -178,6 +179,32 @@ public class StudentRestApi {
                e.printStackTrace();
                return Response.status(Status.EXPECTATION_FAILED).entity("Exception occured").build();
            }
+    }
+    
+    
+    /**
+     * Method to handle API request to verify payment using payment reference number
+     * @param studentId
+     * @param referenceNumber
+     * @return
+     * @throws SQLException 
+     */
+    @PUT
+    @Path("/payfees/{studentId}/{referenceNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makePayment(@PathParam("studentId") int studentId,@PathParam("referenceNo") String referenceNo){
+        
+        StudentDaoInterface studentDaoOperation = new StudentDaoOperation();
+        try {
+        	//logic of checking if payment has been made with this reference number
+        	studentDaoOperation.makePaymentSuccessful(studentId,referenceNo);
+        	return Response.status(200).entity("PaymentSuccessful").build();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Status.NOT_FOUND).entity("Payment Still Pending").build();
+        }
+        
     }
     
     @GET
