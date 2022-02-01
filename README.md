@@ -1,0 +1,2 @@
+# CRS-JEDI-7-FLIPKART-DROPWIZARD
+Final JEDI project : Group 7
