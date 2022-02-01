@@ -27,7 +27,7 @@ public class App extends Application<Configuration> {
         LOGGER.info("Registering REST resources");
 //        e.jersey().register(new EmployeeRESTController(e.getValidator()));
         
-//        e.jersey().register(new AdminRestApi());	<- java.lang.NullPointerException
+        e.jersey().register(new AdminRestApi());	
         e.jersey().register(new ProfessorRestApi());
         e.jersey().register(new StudentRestApi());  
         e.jersey().register(new UserRestApi());
