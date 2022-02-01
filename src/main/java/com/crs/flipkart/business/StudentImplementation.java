@@ -147,23 +147,24 @@ public class StudentImplementation implements StudentInterface{
 	 * @return StudentCourseChoice object
 	 */
 	@Override
-	public StudentCourseChoice selectCourses(int studentId) {
+	public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) {	//we'll receive the list of course id's a student chooses
 		// TODO Auto-generated method stub
-		System.out.println("Following courses are available");
-		displayCourseCatalog();
+//		System.out.println("Following courses are available");
+//		displayCourseCatalog();
 		
-		System.out.println("Please select your courses (4 Primary + 2 Alternate):");
-		Scanner sc = new Scanner(System.in);
+//		System.out.println("Please select your courses (4 Primary + 2 Alternate):");
+//		Scanner sc = new Scanner(System.in);
 		ArrayList<Course> selectedCourses = new ArrayList<Course>();
 		ArrayList<Course> courseCatalog = courseImplementation.getAllCourses();
 		Map<Integer,Course> courseList = new HashMap<>();
 		for(Course c: courseCatalog)
 			courseList.put(c.getCourseId(), c);
-		for(int i=1; i<=6; )
+		for(int i=0; i<6; )
 		{
-			System.out.print("Enter course(courseId) choice-"+i+": ");
-			int courseId = sc.nextInt();
+			//System.out.print("Enter course(courseId) choice-"+i+": ");
+			//int courseId = sc.nextInt();
 			
+			int courseId = id.get(i);
 			Course course = null;
 			if(courseList.containsKey(courseId))
 				course = courseList.get(courseId);
@@ -185,13 +186,13 @@ public class StudentImplementation implements StudentInterface{
 		studentDaoImplementation.storeStudentCourseChoice(studentCourseChoice);
 		
 		System.out.println("Registration form submitted!!");
-		Notification notification = new Notification();
-		notification.setUserId(CRSApplication.getUserId());
-		notification.setMessage("Your application form has been submitted for the further process.");
-		Date date = new Date();
-		notification.setDateTime(date);
-		AdminDaoInterface adminDao = new AdminDaoOperation();
-		adminDao.generateNotification(notification);
+//		Notification notification = new Notification();
+//		notification.setUserId(CRSApplication.getUserId());
+//		notification.setMessage("Your application form has been submitted for the further process.");
+//		Date date = new Date();
+//		notification.setDateTime(date);
+//		AdminDaoInterface adminDao = new AdminDaoOperation();
+//		adminDao.generateNotification(notification);
 		return studentCourseChoice;
 	}
 

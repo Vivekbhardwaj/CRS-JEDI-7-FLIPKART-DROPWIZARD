@@ -36,7 +36,7 @@ public interface StudentInterface {
 		 * @param StudentId
 		 * @return StudentCourseChoice object
 		 */
-	 public StudentCourseChoice selectCourses(int studentId);
+	 public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id);
 	 
 	 /**
 		 * Method to display course catalog

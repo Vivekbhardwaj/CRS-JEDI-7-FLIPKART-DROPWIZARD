@@ -4,7 +4,8 @@
 package com.crs.flipkart.controller;
 
 import java.util.ArrayList;
- 
+
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.GradeCard;
 import com.crs.flipkart.bean.Student;
+import com.crs.flipkart.bean.StudentCourseChoice;
 import com.crs.flipkart.bean.StudentRegisteredCourses;
 import com.crs.flipkart.bean.StudentResponse;
 import com.crs.flipkart.business.StudentImplementation;
@@ -258,7 +260,39 @@ public class StudentRestApi {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response welcomeToCRS() {
-        return Response.status(Status.OK).entity("Welcome To CRS").build();
+        return Response.status(Status.OK).entity("You Hit StudentApi").build();
     }
+    
+	@POST
+	@Path("/registerCourses/{c1}/{c2}/{c3}/{c4}/{c5}/{c6}/{studentId}")
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerCourses(
+			@PathParam("c1") int c1,
+			@PathParam("c2") int c2,
+			@PathParam("c3") int c3,
+			@PathParam("c4") int c4,
+			@PathParam("c5") int c5,
+			@PathParam("c6") int c6,
+			@NotNull
+			@PathParam("studentId") int studentId){
+						
+		try
+		{
+			ArrayList<Integer> id = new ArrayList<Integer>();
+			id.add(c1);id.add(c2);id.add(c3);id.add(c4);id.add(c5);id.add(c6);
+			
+			StudentImplementation studentImplementation = new StudentImplementation();
+			StudentCourseChoice studentCourseChoice = studentImplementation.selectCourses(studentId, id);
+			return Response.status(201).entity("Registration Successfull!").build();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+            return Response.status(500).entity("Error Occured").build();
+		}
+					
+		
+	}
     
 }
