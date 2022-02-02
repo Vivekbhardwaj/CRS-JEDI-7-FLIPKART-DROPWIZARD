@@ -39,7 +39,7 @@ import com.crs.flipkart.exceptions.UserNotFoundException;
 @Path("/professor")
 public class ProfessorRestApi {
 	
-	ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
+	
 	private static Logger logger = Logger.getLogger(ProfessorDaoOperation.class);
 	/**
      * Method to View all All available Courses
@@ -52,9 +52,13 @@ public class ProfessorRestApi {
 	public ArrayList<Course>viewAvailableCourses() throws ValidationException, CourseNotFoundException  {
 		logger.info("Viewing Available Courses");
 		ArrayList<Course> courses=new ArrayList<Course>();
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 		try {
 		
 		courses=professorInterface.viewAvailableCourses();
+		}
+		catch(CourseNotFoundException ex) {
+			return null;
 		}
 		catch(Exception e){
 			return null;
@@ -79,6 +83,7 @@ public class ProfessorRestApi {
 			@QueryParam("courseId") int courseId) throws ValidationException, UserNotFoundException {
 		logger.info("Viewing Enrolled Students");
 		ArrayList<Student> students=new ArrayList<Student>();
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 	
 		try{
 			
@@ -115,15 +120,20 @@ public class ProfessorRestApi {
 			@NotNull
 			@QueryParam("grade") float grade) throws ValidationException, CourseNotFoundException, UserNotFoundException  {
 		logger.info("Assigning grades");
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 		try {
 			
 			professorInterface.assignGrade(studentId, courseId, grade);
+			return Response.status(200).entity("Grade added for student with studentId: "+studentId).build();
 		}
-		
+		catch (CourseNotFoundException ex) {
+			return Response.status(400).entity(ex.getMessage()).build();
+			
+		}
 		catch(Exception e){
 			return Response.status(500).entity(e.getMessage()).build();
 		}
-		return Response.status(200).entity("Grade added for student with studentId: "+studentId).build();
+		
 	}
 	
 	/**
@@ -140,19 +150,20 @@ public class ProfessorRestApi {
 	public Response selectCourses(@NotNull @QueryParam("profId") int profId,
 			@NotNull @QueryParam("courseId") int courseId ) throws CourseNotFoundException {
 		logger.info("Selecting Courses");
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 			try {
-				if(professorInterface.selectCourse(profId,courseId)) {
-					return Response.status(200).entity("Course has been succesfully allocated: ").build();
-				}
-				else {
-					
-					return Response.status(200).entity("Course has been already allocated: ").build();
-				}
+				professorInterface.selectCourse(profId,courseId); 
+				return Response.status(200).entity("Course has been succesfully allocated: ").build();
+				
+			}
+			catch(CourseNotFoundException ex) {
+				return Response.status(400).entity(ex.getMessage()).build();
 			}
 			catch(Exception e) {
 				 return Response.status(400).entity(e.getMessage()).build();
 
 			}
+			
 			
 		
 	}

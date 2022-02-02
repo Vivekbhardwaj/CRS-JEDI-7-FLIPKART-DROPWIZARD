@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.Student;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 
 /**
  * @author HP
@@ -18,5 +19,5 @@ public interface ProfessorDaoInterface {
 	
 	public boolean selectCourse(int professorId, int courseId);
 	public ArrayList<Course> viewAvailableCourses();
-	public Boolean assignGrade(int studentId, int courseId,float grade);
+	public Boolean assignGrade(int studentId, int courseId,float grade) throws CourseNotFoundException;
 }

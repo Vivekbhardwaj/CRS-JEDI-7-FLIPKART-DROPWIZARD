@@ -18,6 +18,7 @@ import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.constants.Gender;
 import com.crs.flipkart.constants.Role;
 import com.crs.flipkart.constants.SqlQueryConstants;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.utils.DBUtils;
 
 /**
@@ -185,9 +186,23 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
      * @param grade the grade to be assigned
 	 * @return Grades to student
 */
-	public Boolean assignGrade(int studentId, int courseId,float grade) {
+	public Boolean assignGrade(int studentId, int courseId,float grade) throws CourseNotFoundException {
 		Connection conn = DBConnection.connectDB();
 		try {
+			PreparedStatement stmt1 = null;
+			String sql1 = "Select * from course ";
+			stmt1 = conn.prepareStatement(sql1);
+		 	ResultSet rs1 = stmt1.executeQuery();
+		 	int flg=0;
+		 	while(rs1.next()) {
+		 		if(rs1.getInt("courseId")==courseId) {
+		 			flg=1;
+		 			break;
+		 		}
+		 	}
+			if(flg==0) {
+				return false;
+			}
 			PreparedStatement stmt = null;
 			
 			String sql = SqlQueryConstants.ASSIGN_GRADES_QUERY;

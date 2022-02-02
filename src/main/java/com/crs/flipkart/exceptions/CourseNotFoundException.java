@@ -14,5 +14,8 @@ public class CourseNotFoundException extends Exception{
 	{
 		System.out.println("No courses found");
 	}
-	
+	 public String getMessage() {
+		 return "Course is not available ";
+	 }
+	 
 }
