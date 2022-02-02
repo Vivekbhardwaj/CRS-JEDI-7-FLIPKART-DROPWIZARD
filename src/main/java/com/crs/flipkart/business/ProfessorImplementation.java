@@ -74,7 +74,7 @@ public class ProfessorImplementation implements ProfessorInterface{
 		
 		ArrayList<Course> clist = professorDaoOperation.viewAvailableCourses();
 		if(clist.size()==0) {
-			throw new CourseNotFoundException();
+			throw new CourseNotFoundException("No courses available");
 		}
 		return clist;
 		
@@ -96,11 +96,8 @@ public class ProfessorImplementation implements ProfessorInterface{
 	
 	public void selectCourse(int professorId, int courseId) throws CourseNotFoundException{
 		
-		if(professorDaoOperation.selectCourse(professorId,courseId)) {
-			
-		}
-		else {
-			throw new CourseNotFoundException();
+		if(!professorDaoOperation.selectCourse(professorId,courseId)) {
+			throw new CourseNotFoundException(courseId);
 		}
 		
 	}
@@ -108,11 +105,8 @@ public class ProfessorImplementation implements ProfessorInterface{
 	public void assignGrade(int studentId, int courseId, float grade) throws CourseNotFoundException {
 		
 		
-			if(professorDaoOperation.assignGrade(studentId,courseId,grade)) {
-				
-			}
-			else {
-				throw new CourseNotFoundException();
+			if(!professorDaoOperation.assignGrade(studentId,courseId,grade)) {
+				throw new CourseNotFoundException(courseId);
 			}
 		
 	}

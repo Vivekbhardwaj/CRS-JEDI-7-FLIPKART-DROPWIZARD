@@ -290,7 +290,7 @@ public class StudentRestApi {
 		catch (CourseNotFoundException e) 
 		{
 			e.printStackTrace();
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage2()).build();
 		}
 					
 		return Response.status(201).entity("Registration Successfull!").build();

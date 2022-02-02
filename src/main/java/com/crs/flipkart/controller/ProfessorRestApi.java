@@ -36,7 +36,7 @@ import com.crs.flipkart.exceptions.UserNotFoundException;
  * Rest API class for professor 
  */
 
-@Path("/professor")
+@Path("/ProfessorApi")
 public class ProfessorRestApi {
 	
 	
