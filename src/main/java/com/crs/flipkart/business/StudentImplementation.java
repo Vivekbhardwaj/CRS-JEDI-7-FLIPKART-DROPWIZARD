@@ -17,6 +17,7 @@ import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
 import com.crs.flipkart.bean.StudentRegisteredCourses;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
 import com.crs.flipkart.dao.AdminDaoInterface;
 import com.crs.flipkart.dao.AdminDaoOperation;
@@ -147,7 +148,7 @@ public class StudentImplementation implements StudentInterface{
 	 * @return StudentCourseChoice object
 	 */
 	@Override
-	public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) {	//we'll receive the list of course id's a student chooses
+	public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) throws CourseNotFoundException {	//we'll receive the list of course id's a student chooses
 		// TODO Auto-generated method stub
 //		System.out.println("Following courses are available");
 //		displayCourseCatalog();
@@ -175,7 +176,7 @@ public class StudentImplementation implements StudentInterface{
 			}
 			else
 			{
-				System.out.println("Course not found!!");
+				throw new CourseNotFoundException(courseId);
 			}
 			
 		}

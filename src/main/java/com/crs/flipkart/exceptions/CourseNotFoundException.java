@@ -10,9 +10,24 @@ package com.crs.flipkart.exceptions;
  */
 public class CourseNotFoundException extends Exception{
 	
-	public CourseNotFoundException()
+	private int courseId;
+	
+	public CourseNotFoundException(int courseId)
 	{
-		System.out.println("No courses found");
+		setCourseId(courseId);
+	}
+	
+	@Override
+	public String getMessage() {
+		return "The course you are trying to update does not exist. CourseId :"+String.valueOf(courseId);
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
 	}
 	
 }
