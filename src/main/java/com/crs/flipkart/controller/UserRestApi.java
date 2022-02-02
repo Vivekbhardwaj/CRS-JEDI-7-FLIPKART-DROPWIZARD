@@ -24,6 +24,7 @@ import com.crs.flipkart.business.AuthorizationService;
 import com.crs.flipkart.business.UserImplementation;
 import com.crs.flipkart.dao.StudentDaoInterface;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.PasswordIsWeakException;
 import com.crs.flipkart.exceptions.UserNotFoundException;
 
 /**
@@ -56,8 +57,15 @@ public class UserRestApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addStudentData(Student student) {
 		UserImplementation userImplementation = new UserImplementation();
-		userImplementation.addUserdata(student);//convert business class function to boolean return type
-		
+		if(student.getUsername().length()==0||student.getUserId()<1||student.getPasswordHash().length()==0)
+			return Response.status(Status.BAD_REQUEST).entity("Insufficient parameters").build();
+		try
+		{
+			userImplementation.addUserdata(student);
+		} catch(PasswordIsWeakException e)
+		{
+			return Response.status(Status.FORBIDDEN).entity("Weak password").build();
+		}
 	   return Response.status(201).entity("Student is succesfully registered!!!").build();
 		
 	} 
