@@ -29,5 +29,8 @@ public class CourseNotFoundException extends Exception{
 	public void setCourseId(int courseId) {
 		this.courseId = courseId;
 	}
-	
+	 public String getMessage() {
+		 return "Course is not available ";
+	 }
+	 
 }

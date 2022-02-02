@@ -13,6 +13,7 @@ import com.crs.flipkart.dao.AdminDaoInterface;
 import com.crs.flipkart.dao.AdminDaoOperation;
 import com.crs.flipkart.dao.ProfessorDaoInterface;
 import com.crs.flipkart.dao.ProfessorDaoOperation;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 
 /**
  * @author HP
@@ -68,9 +69,13 @@ public class ProfessorImplementation implements ProfessorInterface{
 		}
 	}
 	
-	public ArrayList<Course>  viewAvailableCourses() {
+	public ArrayList<Course>  viewAvailableCourses() throws CourseNotFoundException {
+		
 		
 		ArrayList<Course> clist = professorDaoOperation.viewAvailableCourses();
+		if(clist.size()==0) {
+			throw new CourseNotFoundException();
+		}
 		return clist;
 		
 	}
@@ -89,15 +94,27 @@ public class ProfessorImplementation implements ProfessorInterface{
 		return student;
 	}
 	
-	public boolean selectCourse(int professorId, int courseId) {
+	public void selectCourse(int professorId, int courseId) throws CourseNotFoundException{
 		
+		if(professorDaoOperation.selectCourse(professorId,courseId)) {
+			
+		}
+		else {
+			throw new CourseNotFoundException();
+		}
 		
-		return professorDaoOperation.selectCourse(professorId,courseId);
 	}
 	
-	public void assignGrade(int studentId, int courseId, float grade) {
+	public void assignGrade(int studentId, int courseId, float grade) throws CourseNotFoundException {
 		
-		professorDaoOperation.assignGrade(studentId,courseId,grade);
+		
+			if(professorDaoOperation.assignGrade(studentId,courseId,grade)) {
+				
+			}
+			else {
+				throw new CourseNotFoundException();
+			}
+		
 	}
 	
 }
