@@ -48,9 +48,9 @@ public class CourseImplementation implements CourseInterface{
 			}
 			else
 			{
-				throw new CourseNotFoundException();
+				throw new CourseNotDeletedException(courseId);
 			}
-		} catch (DatabaseException | CourseNotFoundException e) {
+		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -75,12 +75,12 @@ public class CourseImplementation implements CourseInterface{
 		AdminDaoInterface admin = new AdminDaoOperation();
 		try {
 			if(admin.updateCourse(course))	//we need to change in the menu so that users can only add the details they can update
-				System.out.println("Course updated successfully!!!");
+				return;
 			else
 			{
-				throw new CourseNotFoundException();
+				throw new CourseNotFoundException(course.getCourseId());
 			}
-		} catch (DatabaseException | CourseNotFoundException e) {
+		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -98,7 +98,7 @@ public class CourseImplementation implements CourseInterface{
 		ArrayList<Course> courseList = getAllCourses();
 		if(courseList.size()==0)
 		{
-			throw new CourseNotFoundException();
+			throw new CourseNotFoundException(courseId);
 		}
 		else
 		{
