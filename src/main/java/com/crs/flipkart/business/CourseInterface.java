@@ -14,7 +14,7 @@ import com.crs.flipkart.exceptions.CourseNotFoundException;
  *
  */
 public interface CourseInterface {
-	public void removeCourse(int courseId) throws CourseNotDeletedException;
+	public String removeCourse(int courseId) throws CourseNotDeletedException;
     public void addCourse(Course course);
     public void updateCourse(Course course) throws CourseNotFoundException;
     public ArrayList<Course> getAllCourses();
