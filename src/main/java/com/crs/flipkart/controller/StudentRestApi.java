@@ -31,6 +31,8 @@ import com.crs.flipkart.dao.CourseDaoImplementation;
 import com.crs.flipkart.dao.CourseDaoInterface;
 import com.crs.flipkart.dao.StudentDaoInterface;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
+import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
  
  
 /**
@@ -224,7 +226,7 @@ public class StudentRestApi {
         	GradeCard gradeCard = studentImplementation.displayGradeCard(studentId);
         	
             return Response.status(Status.OK).entity(gradeCard).build();
-           } catch (Exception e) {
+           } catch (GradeCardNotPublishedException e) {
                e.printStackTrace();
                return Response.status(Status.FORBIDDEN).entity(e.getMessage()).build();
            }
@@ -284,15 +286,14 @@ public class StudentRestApi {
 			
 			StudentImplementation studentImplementation = new StudentImplementation();
 			StudentCourseChoice studentCourseChoice = studentImplementation.selectCourses(studentId, id);
-			return Response.status(201).entity("Registration Successfull!").build();
 		}
-		catch (Exception e) 
+		catch (CourseNotFoundException e) 
 		{
 			e.printStackTrace();
-            return Response.status(500).entity("Error Occured").build();
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 					
-		
+		return Response.status(201).entity("Registration Successfull!").build();
 	}
     
 }

@@ -12,6 +12,7 @@ import com.crs.flipkart.dao.CourseDaoImplementation;
 import com.crs.flipkart.dao.CourseDaoInterface;
 import com.crs.flipkart.dao.StudentDaoInterface;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.CourseAlreadyExists;
 import com.crs.flipkart.exceptions.CourseNotDeletedException;
 import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.DatabaseException;
@@ -54,7 +55,7 @@ public class CourseImplementation implements CourseInterface{
 			return e.getMessage();
 		}
 	}
-	public void addCourse(Course course)
+	public void addCourse(Course course) throws CourseAlreadyExists
 	{
 		AdminDaoInterface admin = new AdminDaoOperation();
 		Boolean ans = null;
@@ -65,9 +66,9 @@ public class CourseImplementation implements CourseInterface{
 			e.printStackTrace();
 		}
 		if(ans)
-			System.out.println("Course added successfully!!!");
+			return;
 		else
-			System.out.println("Error while executing operation");
+			throw new CourseAlreadyExists();
 	}
 	public void updateCourse(Course course) throws CourseNotFoundException{
 
