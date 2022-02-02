@@ -120,7 +120,8 @@ public class AdminRestApi{
 			@QueryParam("courseId") int courseId){
 		
 		try {
-			return Response.status(201).entity(courseImplementation.removeCourse(courseId)).build();
+			courseImplementation.removeCourse(courseId);
+			return Response.status(201).entity("Course with courseCode: " + courseId + " deleted from catalog").build();
 		
 		} catch (Exception e) {
 			

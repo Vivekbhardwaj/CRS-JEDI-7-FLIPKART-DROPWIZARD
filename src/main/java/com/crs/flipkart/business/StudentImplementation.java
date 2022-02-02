@@ -176,7 +176,7 @@ public class StudentImplementation implements StudentInterface{
 			}
 			else
 			{
-				throw new CourseNotFoundException();
+				throw new CourseNotFoundException(courseId);
 			}
 			
 		}
