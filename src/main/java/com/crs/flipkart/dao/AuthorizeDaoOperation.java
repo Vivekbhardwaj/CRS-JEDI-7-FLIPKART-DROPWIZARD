@@ -35,7 +35,6 @@ public class AuthorizeDaoOperation implements AuthorizeDaoInterface{
 	public Role authorizeUser(String username, String password) {
 		try {
 			PreparedStatement stmt = null;
-			System.out.println(username+" "+password);
 			String sql = "SELECT * FROM user join role ON (user.userId = role.userId) WHERE username = ? AND password = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, username);
