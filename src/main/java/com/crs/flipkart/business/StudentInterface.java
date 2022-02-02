@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.crs.flipkart.bean.GradeCard;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
 
 /**
@@ -35,8 +36,9 @@ public interface StudentInterface {
 		 * Method for Selecting Courses
 		 * @param StudentId
 		 * @return StudentCourseChoice object
+	 * @throws CourseNotFoundException 
 		 */
-	 public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id);
+	 public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) throws CourseNotFoundException;
 	 
 	 /**
 		 * Method to display course catalog
