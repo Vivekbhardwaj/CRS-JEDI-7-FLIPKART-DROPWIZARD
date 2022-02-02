@@ -38,13 +38,13 @@ public class CourseImplementation implements CourseInterface{
 		return instance;
 	}
 	
-	public void removeCourse(int courseId) throws CourseNotDeletedException
+	public String removeCourse(int courseId) throws CourseNotDeletedException
 	{
 		AdminDaoInterface admin = new AdminDaoOperation();
 		try {
 			if(admin.deleteCourse(courseId))
 			{
-				System.out.println("Course details deleted from the database");
+				return "Course details deleted from the database";
 			}
 			else
 			{
@@ -52,7 +52,7 @@ public class CourseImplementation implements CourseInterface{
 			}
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return e.getMessage();
 		}
 	}
 	public void addCourse(Course course) throws CourseAlreadyExists
