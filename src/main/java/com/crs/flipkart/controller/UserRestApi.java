@@ -37,17 +37,16 @@ public class UserRestApi {
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response viewStudent(@NotNull @QueryParam("username") String username, @NotNull  @QueryParam("password") String password) throws UserNotFoundException{
+	public Response viewStudent(@NotNull @QueryParam("username") String username, @NotNull  @QueryParam("password") String password){
 		
 		AuthorizationService auth = new AuthorizationService();
 		try
 		{
-			System.out.println("password: "+password);
 			auth.authorize(username, password);
 			return Response.status(201).entity("User credentials verified").build();
 		}
-		catch (Exception e) {
-			throw new UserNotFoundException();
+		catch (UserNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).entity("Wrong username or password").build();
 		}
 	}
 
@@ -68,14 +67,23 @@ public class UserRestApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response resetPassword(Map<String,String> params) {
-		StudentDaoInterface updaterDao = new StudentDaoOperation();
-
-        if(params.size()==3 &&  updaterDao.update(params.get("username"),params.get("password"),params.get("newPassword"))){
-            return Response.status(201).entity("Password Updated Successfully !!").build();
-        }
-        else{
-            return Response.status(201).entity("Try again !").build();
-        }
+		if(params.size()==3){
+			StudentDaoOperation updaterDao = new StudentDaoOperation();
+			try
+			{
+				updaterDao.update(params.get("username"),params.get("password"),params.get("newPassword"));
+				System.out.println("Hello World");
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Hello World!!!");
+				return Response.status(Status.UNAUTHORIZED).entity(e.getMessage()).build();
+			}
+			return Response.status(Status.ACCEPTED).entity("Password Updated Successfully !!").build();
+		}
+		else{
+		    return Response.status(Status.BAD_REQUEST).entity("Try again!!!").build();
+		}
 	   
 	} 
 	
